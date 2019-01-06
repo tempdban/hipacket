@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Hi packet</string>
+    <string name="service_description">service_description</string>
+</resources>
