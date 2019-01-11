@@ -42,25 +42,37 @@ public class PacketService extends AccessibilityService {
                     getLastPacket();
                 } else if (className.equals("com.baidu.hi.luckymoney.LuckyMoneyActivity")) {
                     Log.i(LOG_TAG,"Detected LuckyMoney activity.");
-                    List<AccessibilityNodeInfo> list =
+                    List<AccessibilityNodeInfo> list1 =
                         root.findAccessibilityNodeInfosByText("查看我的红包记录");
-                    if (list.size() == 0) {
+                    List<AccessibilityNodeInfo> list2 =
+                            root.findAccessibilityNodeInfosByText("手慢了，红包派完了");
+                    if ((list1.size() + list2.size()) == 0) {
                         Log.i(LOG_TAG,"open envelope");
-                        list = root.findAccessibilityNodeInfosByText("拆红包");
+                        List<AccessibilityNodeInfo> list = root.findAccessibilityNodeInfosByText("拆红包");
+
                         AccessibilityNodeInfo parrent = null;
-                        if (list.size() > 0)
+                        if (list.size() > 0) {
                             parrent = list.get(0);
-                        while (parrent != null) {
-                            if (parrent.isClickable()) {
-                                parrent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                                returnFlag = true;
-                                break;
-                            } else {
-                                parrent = parrent.getParent();
+                            while (parrent != null) {
+                                if (parrent.isClickable()) {
+                                    returnFlag = true;
+                                    parrent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                    break;
+                                } else {
+                                    parrent = parrent.getParent();
+                                }
                             }
                         }
+                        else {
+                            list = root.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/envelope_open");
+                            if (list.size() > 0) {
+                                parrent = list.get(0);
+                                returnFlag = true;
+                                parrent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                        }
+
                     } else {
-                        Log.i(LOG_TAG,"Back");
                         performBack();
                     }
                 }
@@ -76,6 +88,7 @@ public class PacketService extends AccessibilityService {
 
 
     private void performBack() {
+        Log.i(LOG_TAG,"Back");
         //clickAllViewId("com.baidu.hi:id/open_envelope_close_multi");
         performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
     }
@@ -104,7 +117,8 @@ public class PacketService extends AccessibilityService {
         int last = 0;
         if (root != null) {
             List<AccessibilityNodeInfo> list =
-                    root.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/chat_item_right_lucky_money_content");
+                    root.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/chat_item_left_lucky_money_content");
+            list.addAll(root.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/chat_item_right_lucky_money_content"));
 
             /*
             for (AccessibilityNodeInfo item : list) {
