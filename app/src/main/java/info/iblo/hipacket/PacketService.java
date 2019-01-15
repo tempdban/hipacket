@@ -43,7 +43,7 @@ public class PacketService extends AccessibilityService {
                 } else if (className.equals("com.baidu.hi.luckymoney.LuckyMoneyActivity")) {
                     Log.i(LOG_TAG,"Detected LuckyMoney activity.");
                     List<AccessibilityNodeInfo> list1 =
-                        root.findAccessibilityNodeInfosByText("查看我的红包记录");
+                            root.findAccessibilityNodeInfosByViewId("com.baidu.hi:id/btn_close");
                     List<AccessibilityNodeInfo> list2 =
                             root.findAccessibilityNodeInfosByText("手慢了，红包派完了");
                     if ((list1.size() + list2.size()) == 0) {
